@@ -1,52 +1,62 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 part of 'crossblock_realm_bloc.dart';
 
-class CrossblockRealmState extends Equatable {
-  final RequestState addState;
-  final RequestState getState;
-  final RequestState deleteState;
+abstract class CrossblockRealmState extends Equatable {
+  final RequestState requestState;
+  const CrossblockRealmState({
+    this.requestState = RequestState.initial,
+  });
+
+  @override
+  List<Object> get props => [requestState];
+}
+
+class CrossblockRealmInitialState extends CrossblockRealmState {
+  const CrossblockRealmInitialState({required super.requestState});
+}
+
+class CrossBlockRealmAddState extends CrossblockRealmState {
   final String generateId;
   final String errorAdd;
-  final String errorDelete;
-  final List<crossblockRealmModel> datas;
-  const CrossblockRealmState({
-    required this.addState,
-    required this.getState,
-    required this.deleteState,
-    required this.generateId,
-    required this.errorAdd,
-    required this.errorDelete,
-    required this.datas,
+  const CrossBlockRealmAddState({
+    super.requestState = RequestState.initial,
+    this.generateId = "",
+    this.errorAdd = "",
   });
 
   @override
   List<Object> get props => [
-        addState,
-        getState,
-        deleteState,
-        datas,
-        errorAdd,
+        requestState,
         generateId,
+        errorAdd,
+      ];
+}
+
+class CrossBlockRealmDeleteState extends CrossblockRealmState {
+  final String errorDelete;
+  const CrossBlockRealmDeleteState({
+    super.requestState = RequestState.initial,
+    this.errorDelete = "",
+  });
+
+  @override
+  List<Object> get props => [
+        requestState,
         errorDelete,
       ];
+}
 
-  CrossblockRealmState copyWith({
-    RequestState? addState,
-    RequestState? getState,
-    RequestState? deleteState,
-    String? generateId,
-    String? errorAdd,
-    String? errorDelete,
-    List<crossblockRealmModel>? datas,
-  }) {
-    return CrossblockRealmState(
-      addState: addState ?? this.addState,
-      getState: getState ?? this.getState,
-      deleteState: deleteState ?? this.deleteState,
-      generateId: generateId ?? this.generateId,
-      errorAdd: errorAdd ?? this.errorAdd,
-      errorDelete: errorDelete ?? this.errorDelete,
-      datas: datas ?? this.datas,
-    );
-  }
+class CrossBlockRealmGetState extends CrossblockRealmState {
+  final String errorGet;
+  final List<crossblockRealmModel> datas;
+  const CrossBlockRealmGetState({
+    super.requestState = RequestState.initial,
+    this.errorGet = "",
+    this.datas = const [],
+  });
+
+  @override
+  List<Object> get props => [
+        requestState,
+        errorGet,
+      ];
 }

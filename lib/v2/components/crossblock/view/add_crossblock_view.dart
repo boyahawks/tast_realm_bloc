@@ -56,48 +56,51 @@ class _AddCrossblockViewState extends State<AddCrossblockView> {
           actions: [
             BlocConsumer<CrossblockRealmBloc, CrossblockRealmState>(
               listener: (context, state) {
-                if (state.addState == RequestState.loading) {
-                  CustomDialog.showLoading(context);
-                }
-                if (state.addState == RequestState.error) {
-                  CustomDialog.hideLoading(context);
-                  CustomDialog.showAlert(
-                      "Error", "Gagal Simpan Crossblock", context);
-                }
-                if (state.addState == RequestState.success) {
-                  CustomDialog.hideLoading(context);
-                  Get.off(context: context, page: const CrossblockView());
+                if (state is CrossBlockRealmAddState) {
+                  if (state.requestState == RequestState.loading) {
+                    CustomDialog.showLoading(context);
+                  }
+                  if (state.requestState == RequestState.error) {
+                    CustomDialog.hideLoading(context);
+                    CustomDialog.showAlert(
+                        "Error", "Gagal Simpan Crossblock", context);
+                  }
+                  if (state.requestState == RequestState.success) {
+                    CustomDialog.hideLoading(context);
+                    Get.off(context: context, page: const CrossblockView());
+                  }
                 }
               },
               builder: (context, state) {
-                print("id ${state.generateId}");
                 return IconButton(
                   onPressed: () {
-                    if (state.addState != RequestState.loading) {
-                      if (!_formKey.currentState!.validate()) {
-                        hideKeyboard(context);
-                      } else {
-                        hideKeyboard(context);
-                        // if (state.dataImages.isEmpty) {
-                        //   CustomDialog.showAlert(
-                        //       "Information", "Picture masih kosong", context);
-                        // } else {
-                        crossblockRealmModel data = crossblockRealmModel(
-                          id: state.generateId,
-                          userID: "23321",
-                          title: titleController.text,
-                          blockID: blockIdController.text,
-                          notes: notesController.text,
-                          deviceID: "123321",
-                          upload: "false",
-                          latitude: "0",
-                          longitude: "0",
-                          createdDate: DateTime.now().toIso8601String(),
-                        );
-                        context
-                            .read<CrossblockRealmBloc>()
-                            .add(CrossblockAddCrossblockRealmEvent(data));
-                        // }
+                    if (state is CrossBlockRealmAddState) {
+                      if (state.requestState != RequestState.loading) {
+                        if (!_formKey.currentState!.validate()) {
+                          hideKeyboard(context);
+                        } else {
+                          hideKeyboard(context);
+                          // if (state.dataImages.isEmpty) {
+                          //   CustomDialog.showAlert(
+                          //       "Information", "Picture masih kosong", context);
+                          // } else {
+                          crossblockRealmModel data = crossblockRealmModel(
+                            id: state.generateId,
+                            userID: "23321",
+                            title: titleController.text,
+                            blockID: blockIdController.text,
+                            notes: notesController.text,
+                            deviceID: "123321",
+                            upload: "false",
+                            latitude: "0",
+                            longitude: "0",
+                            createdDate: DateTime.now().toIso8601String(),
+                          );
+                          context
+                              .read<CrossblockRealmBloc>()
+                              .add(CrossblockAddCrossblockRealmEvent(data));
+                          // }
+                        }
                       }
                     }
                   },

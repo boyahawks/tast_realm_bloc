@@ -31,47 +31,48 @@ class CrossblockView extends StatelessWidget {
           ),
         ),
         body: BlocConsumer<CrossblockRealmBloc, CrossblockRealmState>(
-          listenWhen: (previous, current) =>
-              previous.deleteState != current.deleteState,
           listener: (context, state) {
-            if (state.deleteState == RequestState.loading) {
-              CustomDialog.showLoading(context);
-            }
-            if (state.deleteState == RequestState.error) {
-              CustomDialog.hideLoading(context);
-              CustomDialog.showAlert(
-                  "Error", "Gagal Simpan Crossblock", context);
-            }
-            if (state.deleteState == RequestState.success) {
-              CustomDialog.hideLoading(context);
-              // Get.off(context: context, page: const CrossblockView());
-              context
-                  .read<CrossblockRealmBloc>()
-                  .add(const CrossblockRealmGetDataEvent());
+            if (state is CrossBlockRealmDeleteState) {
+              if (state.requestState == RequestState.loading) {
+                CustomDialog.showLoading(context);
+              }
+              if (state.requestState == RequestState.error) {
+                CustomDialog.hideLoading(context);
+                CustomDialog.showAlert(
+                    "Error", "Gagal Simpan Crossblock", context);
+              }
+              if (state.requestState == RequestState.success) {
+                CustomDialog.hideLoading(context);
+                // Get.off(context: context, page: const CrossblockView());
+                context
+                    .read<CrossblockRealmBloc>()
+                    .add(const CrossblockRealmGetDataEvent());
+              }
             }
           },
-          buildWhen: (previous, current) =>
-              previous.getState != current.getState,
           builder: (context, state) {
-            if (state.getState == RequestState.loading) {
-              return const Center(child: CircularProgressIndicator());
-            } else if (state.datas.isEmpty) {
-              return const Center(
-                child: Text("Belum ada data"),
-              );
-            } else {
-              return ListView.builder(
-                physics: const BouncingScrollPhysics(),
-                itemCount: state.datas.length,
-                padding: const EdgeInsets.all(20.0),
-                itemBuilder: (context, index) {
-                  final crossblockRealmModel data = state.datas[index];
-                  return ContainerCrossblock(
-                    data: data,
-                  );
-                },
-              );
+            if (state is CrossBlockRealmGetState) {
+              if (state.requestState == RequestState.loading) {
+                return const Center(child: CircularProgressIndicator());
+              } else if (state.datas.isEmpty) {
+                return const Center(
+                  child: Text("Belum ada data"),
+                );
+              } else {
+                return ListView.builder(
+                  physics: const BouncingScrollPhysics(),
+                  itemCount: state.datas.length,
+                  padding: const EdgeInsets.all(20.0),
+                  itemBuilder: (context, index) {
+                    final crossblockRealmModel data = state.datas[index];
+                    return ContainerCrossblock(
+                      data: data,
+                    );
+                  },
+                );
+              }
             }
+            return const SizedBox();
           },
         ),
         floatingActionButton: Builder(builder: (context) {
