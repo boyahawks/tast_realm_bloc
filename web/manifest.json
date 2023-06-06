@@ -1,6 +1,6 @@
 {
-    "name": "test_realm_bloc",
-    "short_name": "test_realm_bloc",
+    "name": "ehp",
+    "short_name": "ehp",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
